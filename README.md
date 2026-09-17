@@ -24,25 +24,67 @@
 
 ---
 
-## 📐 System Architecture
+## 📐 System Architecture & Data Flow
 
 ```mermaid
-flowchart TD
-    User([👤 User]) -->|Submits Target URL| WebUI[💻 Next.js Cyber-Dark UI]
-    WebUI -->|Triggers Audit API| Agent[🤖 Autonomous Agent Engine]
-    
-    subgraph Browser & AI Loop
-        Agent -->|State & Interactive Elements| LLM[🧠 Multi-LLM Navigator\nTavily | Claude | OpenAI | Gemini | Groq]
-        LLM -->|Decision: Click / Form / Finish| Agent
-        Agent -->|Hardware Mouse Events & Nav| StealthBrowser[🌐 Solari Stealth Browser]
-        StealthBrowser -->|Page State Snapshot & Screenshots| Agent
+flowchart TB
+    subgraph UI_Layer["💻 CLIENT & INTERFACE LAYER"]
+        User([👤 User / Auditor]) -->|1. Submit Target URL| WebApp["💻 Next.js Cyber-Dark Dashboard\n(App Router & Server Actions)"]
+        WebApp -->|8. Render Live Audit Report & Visual Evidence| User
     end
-    
-    Agent -->|DOM Evaluation| Detector[🔍 Dark Pattern Detector Engine\nlib/checks.js]
-    Detector -->|Audit Findings & Penalty Deductions| Report[📊 Audit Report Builder\nlib/report.js]
-    Report -->|JSON Data + Screenshots| Storage[(📁 data/audits.json)]
-    Storage -->|Renders Live Findings| WebUI
+
+    subgraph Orchestration_Layer["🤖 AUTONOMOUS AGENT ORCHESTRATOR"]
+        WebApp -->|2. Trigger Audit Session| AgentCore["⚙️ Autonomous Agent Loop\n(lib/agent.js)"]
+        AgentCore -->|3. Extract Interactive DOM Elements| ElementMap["🗺️ Element Resolution Map\n(Target ID ➔ Interactive Node)"]
+    end
+
+    subgraph AI_Intelligence_Layer["🧠 AI DECISION & LLM CASCADE"]
+        ElementMap -->|4. Prompt Payload| LLMProvider{"🧠 Multi-Provider LLM Cascade\n(lib/llm.js)"}
+        LLMProvider -->|Tier 1| Tavily["🔍 Tavily AI"]
+        LLMProvider -->|Tier 2| Claude["⚡ Anthropic Claude 3.5"]
+        LLMProvider -->|Tier 3| OpenAI["🟢 OpenAI GPT-4o"]
+        LLMProvider -->|Tier 4| Gemini["✨ Google Gemini 2.0"]
+        LLMProvider -->|Tier 5| Groq["🚀 Groq Llama 3.3"]
+        LLMProvider -->|Tier 6 Fallback| Deterministic["🛡️ Deterministic Heuristic Engine"]
+        LLMProvider -->|5. Structured Action Decision\n(Click / Input / Finish)| AgentCore
+    end
+
+    subgraph Execution_Layer["🌐 STEALTH BROWSER AUTOMATION"]
+        AgentCore -->|6. Real Hardware Pointer Clicks & Form Fill| StealthEngine["🕵️ Stealth Browser Engine\n(@solarisdk/browser + Playwright)"]
+        StealthEngine -->|Auto-Dismiss| Popups["🚫 Modal & Vision Mode Overlay Handler"]
+        StealthEngine -->|Full-Page Snapshots & State| Screenshots["📸 Screenshot & Step Recorder"]
+    end
+
+    subgraph Analytics_Layer["🔍 AUDIT & SCORING PIPELINE"]
+        Screenshots -->|DOM Snapshots| DetectionEngine["🔍 Dark Pattern Detector Engine\n(lib/checks.js)"]
+        DetectionEngine -->|Calculates Penalties & Asymmetry| ReportBuilder["📊 Audit Report Generator\n(lib/report.js)"]
+        ReportBuilder -->|7. Save Findings & Evidence| JSONStore[("📁 Persistent JSON Store\ndata/audits.json")]
+        JSONStore -->|Fetch Audit Results| WebApp
+    end
+
+    %% Custom Styling
+    classDef ui fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef agent fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef ai fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#f8fafc;
+    classDef browser fill:#701a75,stroke:#f0abfc,stroke-width:2px,color:#f8fafc;
+    classDef analytics fill:#7c2d12,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
+
+    class WebApp,User ui;
+    class AgentCore,ElementMap agent;
+    class LLMProvider,Tavily,Claude,OpenAI,Gemini,Groq,Deterministic ai;
+    class StealthEngine,Popups,Screenshots browser;
+    class DetectionEngine,ReportBuilder,JSONStore analytics;
 ```
+
+### ⚙️ Component Responsibilities
+
+| Subsystem | Module | Key Responsibility |
+| :--- | :--- | :--- |
+| **Agent Orchestrator** | `lib/agent.js` | Manages the dual-flow exploration loop (**Signup Flow ➔ Reset ➔ Cancellation Flow**), element map generation, and state transition validation. |
+| **Multi-LLM Resiliency** | `lib/llm.js` | Executes a **zero-downtime cascade** across 5 AI providers with resilient JSON response parsing, prompt truncation (<300 chars), and heuristic fallbacks. |
+| **Stealth Browser Engine** | `lib/solari-agent.js` | Emulates real human hardware mouse coordinates `(cx, cy)`, handles popups/modals automatically, and records step-by-step full-page screenshots. |
+| **Detection & Scoring** | `lib/checks.js` | Runs 6 deterministic heuristics against DOM snapshots, deducting severity penalties (High `-25`, Medium `-15`) to generate the **0–100 UX Health Score**. |
+| **Report Builder** | `lib/report.js` | Consolidates audit findings, deduplicates flagged patterns, calculates flow step asymmetry, and formats audit evidence for the frontend. |
 
 ---
 
