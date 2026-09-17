@@ -52,7 +52,13 @@ export default function HomePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ targetUrl: url })
       });
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") || "";
+      let data = {};
+      if (contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        throw new Error(`Server error (${res.status}): Please check backend server log.`);
+      }
       if (!res.ok) throw new Error(data.error ?? "Could not start audit");
       router.push(`/audit/${data.audit.id}`);
     } catch (err) {

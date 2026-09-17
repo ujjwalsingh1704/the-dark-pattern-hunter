@@ -111,13 +111,18 @@ export default function AuditReportPage() {
     if (!auditId) return;
     let active = true;
     async function poll() {
-      const res = await fetch(`/api/audits/${auditId}`);
-      if (!res.ok) return;
-      const data = await res.json();
-      if (!active) return;
-      setAudit(data.audit);
-      if (data.audit.status === "queued" || data.audit.status === "running") {
-        setTimeout(poll, 2500);
+      try {
+        const res = await fetch(`/api/audits/${auditId}`);
+        const contentType = res.headers.get("content-type") || "";
+        if (!res.ok || !contentType.includes("application/json")) return;
+        const data = await res.json();
+        if (!active || !data?.audit) return;
+        setAudit(data.audit);
+        if (data.audit.status === "queued" || data.audit.status === "running") {
+          setTimeout(poll, 2500);
+        }
+      } catch {
+        // Ignore transient network/JSON polling errors
       }
     }
     poll();
