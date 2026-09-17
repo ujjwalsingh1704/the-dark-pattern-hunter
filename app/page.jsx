@@ -37,8 +37,14 @@ export default function HomePage() {
 
   useEffect(() => {
     fetch("/api/audits")
-      .then((r) => r.json())
-      .then((d) => setAudits(d.audits ?? []))
+      .then(async (r) => {
+        const contentType = r.headers.get("content-type") || "";
+        if (r.ok && contentType.includes("application/json")) {
+          return r.json();
+        }
+        return { audits: [] };
+      })
+      .then((d) => setAudits(d?.audits ?? []))
       .catch(() => {});
   }, []);
 
