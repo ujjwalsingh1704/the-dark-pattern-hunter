@@ -29,40 +29,39 @@
 ```mermaid
 flowchart TB
     subgraph UI_Layer["💻 CLIENT & INTERFACE LAYER"]
-        User([👤 User / Auditor]) -->|1. Submit Target URL| WebApp["💻 Next.js Cyber-Dark Dashboard\n(App Router & Server Actions)"]
-        WebApp -->|8. Render Live Audit Report & Visual Evidence| User
+        User([👤 User / Auditor]) -->|"1. Submit Target URL"| WebApp["💻 Next.js Cyber-Dark Dashboard<br/>(App Router & Server Actions)"]
+        WebApp -->|"8. Render Live Audit Report & Visual Evidence"| User
     end
 
     subgraph Orchestration_Layer["🤖 AUTONOMOUS AGENT ORCHESTRATOR"]
-        WebApp -->|2. Trigger Audit Session| AgentCore["⚙️ Autonomous Agent Loop\n(lib/agent.js)"]
-        AgentCore -->|3. Extract Interactive DOM Elements| ElementMap["🗺️ Element Resolution Map\n(Target ID ➔ Interactive Node)"]
+        WebApp -->|"2. Trigger Audit Session"| AgentCore["⚙️ Autonomous Agent Loop<br/>(lib/agent.js)"]
+        AgentCore -->|"3. Extract Interactive DOM Elements"| ElementMap["🗺️ Element Resolution Map<br/>(Target ID ➔ Interactive Node)"]
     end
 
     subgraph AI_Intelligence_Layer["🧠 AI DECISION & LLM CASCADE"]
-        ElementMap -->|4. Prompt Payload| LLMProvider{"🧠 Multi-Provider LLM Cascade\n(lib/llm.js)"}
-        LLMProvider -->|Tier 1| Tavily["🔍 Tavily AI"]
-        LLMProvider -->|Tier 2| Claude["⚡ Anthropic Claude 3.5"]
-        LLMProvider -->|Tier 3| OpenAI["🟢 OpenAI GPT-4o"]
-        LLMProvider -->|Tier 4| Gemini["✨ Google Gemini 2.0"]
-        LLMProvider -->|Tier 5| Groq["🚀 Groq Llama 3.3"]
-        LLMProvider -->|Tier 6 Fallback| Deterministic["🛡️ Deterministic Heuristic Engine"]
-        LLMProvider -->|5. Structured Action Decision\n(Click / Input / Finish)| AgentCore
+        ElementMap -->|"4. Prompt Payload"| LLMProvider{"🧠 Multi-Provider LLM Cascade<br/>(lib/llm.js)"}
+        LLMProvider -->|"Tier 1"| Tavily["🔍 Tavily AI"]
+        LLMProvider -->|"Tier 2"| Claude["⚡ Anthropic Claude 3.5"]
+        LLMProvider -->|"Tier 3"| OpenAI["🟢 OpenAI GPT-4o"]
+        LLMProvider -->|"Tier 4"| Gemini["✨ Google Gemini 2.0"]
+        LLMProvider -->|"Tier 5"| Groq["🚀 Groq Llama 3.3"]
+        LLMProvider -->|"Tier 6 Fallback"| Deterministic["🛡️ Deterministic Heuristic Engine"]
+        LLMProvider -->|"5. Action Decision (Click / Form / Finish)"| AgentCore
     end
 
     subgraph Execution_Layer["🌐 STEALTH BROWSER AUTOMATION"]
-        AgentCore -->|6. Real Hardware Pointer Clicks & Form Fill| StealthEngine["🕵️ Stealth Browser Engine\n(@solarisdk/browser + Playwright)"]
-        StealthEngine -->|Auto-Dismiss| Popups["🚫 Modal & Vision Mode Overlay Handler"]
-        StealthEngine -->|Full-Page Snapshots & State| Screenshots["📸 Screenshot & Step Recorder"]
+        AgentCore -->|"6. Real Hardware Pointer Clicks & Form Fill"| StealthEngine["🕵️ Stealth Browser Engine<br/>(@solarisdk/browser + Playwright)"]
+        StealthEngine -->|"Auto-Dismiss"| Popups["🚫 Modal & Vision Mode Overlay Handler"]
+        StealthEngine -->|"Full-Page Snapshots & State"| Screenshots["📸 Screenshot & Step Recorder"]
     end
 
     subgraph Analytics_Layer["🔍 AUDIT & SCORING PIPELINE"]
-        Screenshots -->|DOM Snapshots| DetectionEngine["🔍 Dark Pattern Detector Engine\n(lib/checks.js)"]
-        DetectionEngine -->|Calculates Penalties & Asymmetry| ReportBuilder["📊 Audit Report Generator\n(lib/report.js)"]
-        ReportBuilder -->|7. Save Findings & Evidence| JSONStore[("📁 Persistent JSON Store\ndata/audits.json")]
-        JSONStore -->|Fetch Audit Results| WebApp
+        Screenshots -->|"DOM Snapshots"| DetectionEngine["🔍 Dark Pattern Detector Engine<br/>(lib/checks.js)"]
+        DetectionEngine -->|"Calculates Penalties & Asymmetry"| ReportBuilder["📊 Audit Report Generator<br/>(lib/report.js)"]
+        ReportBuilder -->|"7. Save Findings & Evidence"| JSONStore[("📁 Persistent JSON Store<br/>data/audits.json")]
+        JSONStore -->|"Fetch Audit Results"| WebApp
     end
 
-    %% Custom Styling
     classDef ui fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
     classDef agent fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
     classDef ai fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#f8fafc;
